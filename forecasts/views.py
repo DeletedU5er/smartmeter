@@ -45,7 +45,7 @@ def inner(request):
 
     
     if region=='W':
-        df2 = get_prices('C','AGILE-18-02-21', data['datetime'].iloc[0])
+        df2 = get_prices('C','AGILE-FLEX-22-11-25', data['datetime'].iloc[0])
         df3 = get_prices('C','AGILE-OUTGOING-19-05-13', data['datetime'].iloc[0])
         df2 = df2 - np.where(df2.index.str[-5:-3].isin(['16','17','18']), 12, 0)
         df2 = df2*10/2
@@ -56,7 +56,7 @@ def inner(request):
         
 
     else:
-        df2 = get_prices(region,'AGILE-18-02-21', data['datetime'].iloc[0])
+        df2 = get_prices(region,'AGILE-FLEX-22-11-25', data['datetime'].iloc[0])
         df2 *= 1.05
 
     if ph:
