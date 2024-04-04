@@ -40,6 +40,7 @@ try:
     #AF: Creates a table called demand (from DANF using load_bmrs_data function in myutils) with 3 columns; date time demand. Table is sorted by date & time
     #AF: Gets 14 days of historic demand (numdays is 14 days). 
     #AF: Data is sourced from load_bmrs_data function in myutils
+    #AF: Gets data from https://api.bmreports.com/BMRS/
     #AF: Data is called "DANF"
     datalist = []
     for d in range(numdays):
@@ -56,6 +57,11 @@ try:
     demand = data[['date','time','demand']].groupby(['date','time']).mean()
 
     # Get historic wind
+    #AF: Creates a table called wind (from WINDFORFUELHH using load_bmrs_data function in myutils) with 3 columns; date time wind. Table is sorted by date & time
+    #AF: Gets 14 days of historic wind (numdays is 14 days). 
+    #AF: Data is sourced from load_bmrs_data function in myutils
+    #AF: Gets data from https://api.bmreports.com/BMRS/
+    #AF: Data is called "WINDFORFUELHH"
     datalist = []
     for d in range(numdays):
         date = (lastdate-pd.offsets.Day(d)).strftime('%Y-%m-%d')
@@ -76,6 +82,8 @@ try:
     wind = data1.groupby(['date','time']).mean()
 
 
+    #AF: creates a table called df based on demand
+    #AF: df = date : time : demand : wind : netdemand (demand-wind) : price
     df = pd.DataFrame(demand)
     df['wind'] = wind
     df['netdemand'] = df.demand-df.wind
@@ -84,7 +92,8 @@ try:
     df = df[df.netdemand.notna()]
     df = df[df.price.notna()].copy()
 
-
+    #AF: creates graph parameters (slope, intercept, r_value) of netdemand vs prices
+    #AF: for graphic see https://guylipman.medium.com/forecasting-uelectricity-prices-3276f893590f
     slope, intercept, r_value, _, _ =  stats.linregress(np.log(df.netdemand.values), df.price.values )
     df['predictprice'] = np.log(df.netdemand.values)*slope + intercept
     df['error'] = df.price-df.predictprice
