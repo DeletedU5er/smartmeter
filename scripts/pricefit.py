@@ -102,7 +102,7 @@ try:
 
 
 
-
+    #AF: adds a row into price_function table of most recent graph paramaters (date : slope : intercept : r : created_on)
     s = """
     INSERT INTO price_function (date, slope, intercept, r, created_on)
     VALUES 
