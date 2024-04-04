@@ -15,6 +15,7 @@ try:
     t = datetime.datetime.today() - pd.offsets.Day(0)
 
     # Get day ahead prices
+    #AF: Creates a table called prices (from the agreed next day wholesale prices) with 3 columns; date time price [kwh]. Table is sorted by date & time
     r = requests.get('https://www.nordpoolgroup.com/globalassets/marketdata-excel-files/n2ex-day-ahead-auction-prices_2021_hourly_gbp.xls')
     a = pd.read_html(StringIO(r.text))[0]
     a.columns=['date','time1','time2','price']
@@ -36,6 +37,10 @@ try:
 
 
     # Get Historic demand (net of solar)
+    #AF: Creates a table called demand (from DANF using load_bmrs_data function in myutils) with 3 columns; date time demand. Table is sorted by date & time
+    #AF: Gets 14 days of historic demand (numdays is 14 days). 
+    #AF: Data is sourced from load_bmrs_data function in myutils
+    #AF: Data is called "DANF"
     datalist = []
     for d in range(numdays):
         date = (lastdate-pd.offsets.Day(d)).strftime('%Y-%m-%d')
